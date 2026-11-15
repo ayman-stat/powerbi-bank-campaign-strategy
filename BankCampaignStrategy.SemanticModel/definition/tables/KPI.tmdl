@@ -1,0 +1,115 @@
+/// All report measures, organised in display folders.
+table KPI
+
+	/// Clients reached in the campaign (one row per client record).
+	measure 'Clients Contacted' = COUNTROWS('Contacts')
+		formatString: #,0
+		displayFolder: 1 Campaign
+
+	/// Clients who subscribed to the term deposit.
+	measure Subscriptions = SUM('Contacts'[Subscribed])
+		formatString: #,0
+		displayFolder: 1 Campaign
+
+	/// Subscriptions / clients contacted.
+	measure 'Conversion Rate' = DIVIDE([Subscriptions], [Clients Contacted])
+		formatString: 0.0%
+		displayFolder: 1 Campaign
+
+	/// Total calls made, including repeat attempts.
+	measure Calls = SUM('Contacts'[Calls])
+		formatString: #,0
+		displayFolder: 1 Campaign
+
+	/// Calls needed for one subscription: the cost side of the campaign.
+	measure 'Calls per Subscription' = DIVIDE([Calls], [Subscriptions])
+		formatString: 0.0
+		displayFolder: 1 Campaign
+
+	measure 'Calls per Client' = DIVIDE([Calls], [Clients Contacted])
+		formatString: 0.00
+		displayFolder: 1 Campaign
+
+	/// Outcome metric only: duration is known after the call ends, so it is never used for targeting.
+	measure 'Avg Call Minutes' = DIVIDE(AVERAGE('Contacts'[CallDurationSec]), 60)
+		formatString: 0.0
+		displayFolder: 1 Campaign
+
+	measure 'Prior Success Conversion' = CALCULATE([Conversion Rate], 'Prior Outcome'[PriorOutcome] = "Previous: yes")
+		formatString: 0.0%
+		displayFolder: 1 Campaign
+
+	measure 'Mobile Conversion' = CALCULATE([Conversion Rate], 'Contacts'[Channel] = "Mobile")
+		formatString: 0.0%
+		displayFolder: 1 Campaign
+
+	/// Conversion across the whole current selection, the baseline for lift.
+	measure 'Campaign Average Conversion' =
+			CALCULATE([Conversion Rate], ALLSELECTED('Client'), ALLSELECTED('Prior Outcome'), ALLSELECTED('Attempt Band'),
+			    ALLSELECTED('Weekday'), ALLSELECTED('Contacts'[Channel]))
+		formatString: 0.0%
+		displayFolder: 2 Segments
+
+	/// Segment conversion relative to the campaign average (1.00x = average). Uses the Lift UDF.
+	measure 'Lift vs Average' = Lift([Conversion Rate], [Campaign Average Conversion])
+		formatString: 0.00"x"
+		displayFolder: 2 Segments
+
+	measure 'Share of Subscriptions' = DIVIDE([Subscriptions], CALCULATE([Subscriptions], ALLSELECTED('Client')))
+		formatString: 0.0%
+		displayFolder: 2 Segments
+
+	/// Selected maximum calls per client (default 5).
+	measure 'Attempt Cap Value' = SELECTEDVALUE('Attempt Cap'[Attempt Cap], 5)
+		formatString: 0
+		displayFolder: 3 Simulator
+
+	/// Calls not made if no client received more than the cap. Exact, because Calls counts every attempt.
+	measure 'Calls Saved at Cap' =
+			VAR _cap = [Attempt Cap Value]
+			RETURN SUMX(FILTER('Contacts', 'Contacts'[Calls] > _cap), 'Contacts'[Calls] - _cap)
+		formatString: #,0
+		displayFolder: 3 Simulator
+
+	/// Subscribers who converted on a call after the cap (their last call was the converting one).
+	measure 'Subscriptions Lost at Cap' =
+			VAR _cap = [Attempt Cap Value]
+			RETURN CALCULATE([Subscriptions], 'Contacts'[Calls] > _cap)
+		formatString: #,0
+		displayFolder: 3 Simulator
+
+	measure 'Calls Saved %' = DIVIDE([Calls Saved at Cap], [Calls])
+		formatString: 0.0%
+		displayFolder: 3 Simulator
+
+	measure 'Subscriptions Kept %' = 1 - DIVIDE([Subscriptions Lost at Cap], [Subscriptions])
+		formatString: 0.0%
+		displayFolder: 3 Simulator
+
+	measure 'Calls per Subscription at Cap' = DIVIDE([Calls] - [Calls Saved at Cap], [Subscriptions] - [Subscriptions Lost at Cap])
+		formatString: 0.0
+		displayFolder: 3 Simulator
+
+	/// 3-month Euribor, monthly average (percent).
+	measure 'Avg Euribor 3M' = AVERAGE('Macro'[Euribor3M])
+		formatString: 0.00"%"
+		displayFolder: 4 Macro
+
+	measure 'Avg Consumer Confidence' = AVERAGE('Macro'[ConsumerConfidenceIndex])
+		formatString: 0.0
+		displayFolder: 4 Macro
+
+	measure 'Cap Caption' = "Cap: " & [Attempt Cap Value] & " calls per client"
+		displayFolder: 9 Report UI
+
+	column Value
+		dataType: string
+		isHidden
+		summarizeBy: none
+		sourceColumn: [Value]
+
+	partition KPI = calculated
+		mode: import
+		source =
+				{BLANK()}
+

@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "SemanticModel",
+    "displayName": "BankCampaignStrategy"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "962692f4-62b6-596c-8d4c-8be834753f16"
+  }
+}

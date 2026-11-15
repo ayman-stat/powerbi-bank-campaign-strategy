@@ -1,0 +1,57 @@
+/// Fact: monthly macro-economic context (Portugal): Euribor 3M, employment, prices, confidence.
+table Macro
+
+	column MonthStart
+		dataType: dateTime
+		isHidden
+		formatString: mmm yyyy
+		summarizeBy: none
+		sourceColumn: MonthStart
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column Euribor3M
+		dataType: double
+		isHidden
+		formatString: 0.00
+		summarizeBy: none
+		sourceColumn: Euribor3M
+
+	column EmploymentVariationRate
+		dataType: double
+		isHidden
+		formatString: 0.0
+		summarizeBy: none
+		sourceColumn: EmploymentVariationRate
+
+	column ConsumerPriceIndex
+		dataType: double
+		isHidden
+		formatString: 0.00
+		summarizeBy: none
+		sourceColumn: ConsumerPriceIndex
+
+	column ConsumerConfidenceIndex
+		dataType: double
+		isHidden
+		formatString: 0.0
+		summarizeBy: none
+		sourceColumn: ConsumerConfidenceIndex
+
+	column EmployedThousands
+		dataType: double
+		isHidden
+		formatString: #,0
+		summarizeBy: none
+		sourceColumn: EmployedThousands
+
+	partition Macro = m
+		mode: import
+		source =
+				let
+				    Source = fnLoadCsv("fact_macro_month.csv"),
+				    Typed = Table.TransformColumnTypes(Source, {{"MonthStart", type date}, {"Euribor3M", type number}, {"EmploymentVariationRate", type number}, {"ConsumerPriceIndex", type number}, {"ConsumerConfidenceIndex", type number}, {"EmployedThousands", type number}}, "en-US")
+				in
+				    Typed
+
+	annotation PBI_ResultType = Table

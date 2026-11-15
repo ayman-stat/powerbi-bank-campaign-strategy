@@ -1,0 +1,27 @@
+/// Call-attempt buckets.
+table 'Attempt Band'
+
+	/// Calls made to the client in this campaign
+	column AttemptBand
+		dataType: string
+		summarizeBy: none
+		sourceColumn: AttemptBand
+		sortByColumn: AttemptBandOrder
+
+	column AttemptBandOrder
+		dataType: int64
+		isHidden
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: AttemptBandOrder
+
+	partition 'Attempt Band' = m
+		mode: import
+		source =
+				let
+				    Source = fnLoadCsv("dim_attempt_band.csv"),
+				    Typed = Table.TransformColumnTypes(Source, {{"AttemptBand", type text}, {"AttemptBandOrder", Int64.Type}}, "en-US")
+				in
+				    Typed
+
+	annotation PBI_ResultType = Table

@@ -1,0 +1,89 @@
+/// Fact: one row per client in the campaign. Calls = calls made to that client in this campaign, including the last.
+table Contacts
+
+	column ClientKey
+		dataType: int64
+		isHidden
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: ClientKey
+
+	column MonthStart
+		dataType: dateTime
+		isHidden
+		formatString: mmm yyyy
+		summarizeBy: none
+		sourceColumn: MonthStart
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column WeekdayNum
+		dataType: int64
+		isHidden
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: WeekdayNum
+
+	/// Contact channel: mobile or landline
+	column Channel
+		dataType: string
+		summarizeBy: none
+		sourceColumn: Channel
+
+	column Calls
+		dataType: int64
+		isHidden
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: Calls
+
+	column AttemptBand
+		dataType: string
+		isHidden
+		summarizeBy: none
+		sourceColumn: AttemptBand
+
+	column PreviousContacts
+		dataType: int64
+		isHidden
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: PreviousContacts
+
+	column PriorOutcome
+		dataType: string
+		isHidden
+		summarizeBy: none
+		sourceColumn: PriorOutcome
+
+	column DaysSincePrior
+		dataType: double
+		isHidden
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: DaysSincePrior
+
+	column CallDurationSec
+		dataType: int64
+		isHidden
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: CallDurationSec
+
+	column Subscribed
+		dataType: int64
+		isHidden
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: Subscribed
+
+	partition Contacts = m
+		mode: import
+		source =
+				let
+				    Source = fnLoadCsv("fact_contact.csv"),
+				    Typed = Table.TransformColumnTypes(Source, {{"ClientKey", Int64.Type}, {"MonthStart", type date}, {"WeekdayNum", Int64.Type}, {"Channel", type text}, {"Calls", Int64.Type}, {"AttemptBand", type text}, {"PreviousContacts", Int64.Type}, {"PriorOutcome", type text}, {"DaysSincePrior", type number}, {"CallDurationSec", Int64.Type}, {"Subscribed", Int64.Type}}, "en-US")
+				in
+				    Typed
+
+	annotation PBI_ResultType = Table

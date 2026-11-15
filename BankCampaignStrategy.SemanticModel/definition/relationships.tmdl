@@ -1,0 +1,24 @@
+relationship bc90eb69-3c3a-504a-b67d-489c8e5ff307
+	fromColumn: Contacts.ClientKey
+	toColumn: Client.ClientKey
+
+relationship 6cb2fd60-e110-505a-8b06-ee9700f38681
+	fromColumn: Contacts.MonthStart
+	toColumn: Date.Date
+
+relationship 292dfb28-d043-5122-842e-392db6ead465
+	fromColumn: Contacts.WeekdayNum
+	toColumn: Weekday.WeekdayNum
+
+relationship 50bdf0ab-c385-53b1-9c9c-989aad0ab33d
+	fromColumn: Contacts.AttemptBand
+	toColumn: 'Attempt Band'.AttemptBand
+
+relationship 6b47c32c-163b-5ac5-8e3b-3bc884697374
+	fromColumn: Contacts.PriorOutcome
+	toColumn: 'Prior Outcome'.PriorOutcome
+
+relationship 3c978da6-2749-59cb-b5ed-a34a28ec44ae
+	fromColumn: Macro.MonthStart
+	toColumn: Date.Date
+

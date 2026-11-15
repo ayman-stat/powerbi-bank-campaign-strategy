@@ -1,0 +1,5 @@
+/// Ratio of a segment rate to a baseline rate; blank when the baseline is blank or zero.
+function Lift =
+		(segmentRate : NUMERIC, baseRate : NUMERIC) =>
+		IF(NOT ISBLANK(baseRate) && baseRate <> 0, DIVIDE(segmentRate, baseRate))
+

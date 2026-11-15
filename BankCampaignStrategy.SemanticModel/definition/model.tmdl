@@ -1,0 +1,24 @@
+/// Bank Campaign Strategy: 41K real telemarketing contacts (Portuguese retail bank, 2008-2010) in a star schema.
+model Model
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	discourageImplicitMeasures
+	sourceQueryCulture: en-US
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation __PBI_TimeIntelligenceEnabled = 0
+
+annotation PBI_ProTooling = ["DevMode"]
+
+ref table Date
+ref table Client
+ref table 'Attempt Band'
+ref table Weekday
+ref table 'Prior Outcome'
+ref table Contacts
+ref table Macro
+ref table 'Attempt Cap'
+ref table KPI
+ref table 'Segment by'

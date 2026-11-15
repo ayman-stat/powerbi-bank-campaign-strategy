@@ -1,0 +1,41 @@
+/// Field parameter: lets the viewer choose the segment dimension on the Segment Lift page.
+table 'Segment by'
+
+	column 'Segment by Order'
+		dataType: int64
+		isHidden
+		formatString: 0
+		summarizeBy: sum
+		sourceColumn: [Value3]
+
+	column 'Segment by Fields'
+		dataType: string
+		isHidden
+		summarizeBy: none
+		sourceColumn: [Value2]
+		sortByColumn: 'Segment by Order'
+
+		extendedProperty ParameterMetadata = {"version":3,"kind":2}
+
+	column 'Segment by'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: [Value1]
+		sortByColumn: 'Segment by Order'
+
+		relatedColumnDetails
+			groupByColumn: 'Segment by Fields'
+
+	partition 'Segment by' = calculated
+		mode: import
+		source =
+				{
+				    ("Job", NAMEOF('Client'[Job]), 0), 
+				    ("Age band", NAMEOF('Client'[AgeBand]), 1), 
+				    ("Education", NAMEOF('Client'[Education]), 2), 
+				    ("Marital status", NAMEOF('Client'[Marital]), 3), 
+				    ("Housing loan", NAMEOF('Client'[HousingLoan]), 4), 
+				    ("Personal loan", NAMEOF('Client'[PersonalLoan]), 5), 
+				    ("Contact channel", NAMEOF('Contacts'[Channel]), 6), 
+				    ("Previous campaign", NAMEOF('Prior Outcome'[PriorOutcome]), 7)
+				}

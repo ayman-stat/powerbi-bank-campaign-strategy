@@ -1,0 +1,27 @@
+/// Previous-campaign outcome.
+table 'Prior Outcome'
+
+	/// Result of the previous campaign for this client
+	column PriorOutcome
+		dataType: string
+		summarizeBy: none
+		sourceColumn: PriorOutcome
+		sortByColumn: PriorOutcomeOrder
+
+	column PriorOutcomeOrder
+		dataType: int64
+		isHidden
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: PriorOutcomeOrder
+
+	partition 'Prior Outcome' = m
+		mode: import
+		source =
+				let
+				    Source = fnLoadCsv("dim_prior_outcome.csv"),
+				    Typed = Table.TransformColumnTypes(Source, {{"PriorOutcome", type text}, {"PriorOutcomeOrder", Int64.Type}}, "en-US")
+				in
+				    Typed
+
+	annotation PBI_ResultType = Table

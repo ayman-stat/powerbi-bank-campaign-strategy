@@ -1,0 +1,4 @@
+PriorOutcome,PriorOutcomeOrder
+Not contacted before,1
+Previous: no,2
+Previous: yes,3
