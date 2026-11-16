@@ -1,0 +1,408 @@
+{
+  "01_eda": {
+    "rows": 41188,
+    "subscription_rate": 0.112654,
+    "duplicate_rows": 12,
+    "rate_by_period": {
+      "May-Nov 2008": 0.048338,
+      "Dec 2008-May 2009": 0.127926,
+      "Jun 2009-May 2010": 0.423228,
+      "Jun-Nov 2010 (test)": 0.5
+    },
+    "euribor_by_period": {
+      "May-Nov 2008": 4.81761,
+      "Dec 2008-May 2009": 1.341776,
+      "Jun 2009-May 2010": 0.869871,
+      "Jun-Nov 2010 (test)": 0.884149
+    },
+    "duration_single_feature_auc": 0.8184,
+    "iv_top": {
+      "duration": 1.912691,
+      "nr.employed": 1.173072,
+      "emp.var.rate": 1.069909,
+      "euribor3m": 1.044712,
+      "cons.conf.idx": 0.860135,
+      "days_since_prior": 0.558861,
+      "contacted_before": 0.55139,
+      "poutcome": 0.547785
+    },
+    "pdays_sentinel_share": 0.963217,
+    "macro_distinct_combinations": 375
+  },
+  "02_propensity_model": {
+    "train_rows": 39780,
+    "test_rows": 1408,
+    "train_rate": 0.098944,
+    "test_rate": 0.5,
+    "validation_trap": {
+      "with macro": {
+        "random 5-fold CV, all 30 months": 0.7973,
+        "random 5-fold CV, training months": 0.7724,
+        "time-ordered folds, training months": 0.5675,
+        "out-of-time test, Jun-Nov 2010": 0.72093
+      },
+      "without macro": {
+        "random 5-fold CV, all 30 months": 0.7242,
+        "random 5-fold CV, training months": 0.6932,
+        "time-ordered folds, training months": 0.5756,
+        "out-of-time test, Jun-Nov 2010": 0.703399
+      }
+    },
+    "cv_time_auc": {
+      "Rule: previous outcome": 0.5853,
+      "Logistic, no macro": 0.6077,
+      "Logistic, with macro": 0.6108,
+      "HistGB, no macro": 0.5854,
+      "HistGB, with macro": 0.5984,
+      "LightGBM tuned, no macro": 0.5969,
+      "LightGBM tuned, with macro": 0.6073
+    },
+    "test": {
+      "Rule: previous outcome": {
+        "auc": 0.6509,
+        "auc_ci": "0.628 - 0.676",
+        "pr_auc": 0.6381,
+        "brier": 0.2815
+      },
+      "Logistic, no macro": {
+        "auc": 0.7039,
+        "auc_ci": "0.677 - 0.730",
+        "pr_auc": 0.68,
+        "brier": 0.2594
+      },
+      "Logistic, with macro": {
+        "auc": 0.7513,
+        "auc_ci": "0.726 - 0.776",
+        "pr_auc": 0.7232,
+        "brier": 0.2104
+      },
+      "HistGB, no macro": {
+        "auc": 0.7088,
+        "auc_ci": "0.681 - 0.737",
+        "pr_auc": 0.691,
+        "brier": 0.2543
+      },
+      "HistGB, with macro": {
+        "auc": 0.7278,
+        "auc_ci": "0.701 - 0.755",
+        "pr_auc": 0.6877,
+        "brier": 0.2296
+      },
+      "LightGBM tuned, no macro": {
+        "auc": 0.7134,
+        "auc_ci": "0.688 - 0.739",
+        "pr_auc": 0.7,
+        "brier": 0.2501
+      },
+      "LightGBM tuned, with macro": {
+        "auc": 0.7536,
+        "auc_ci": "0.729 - 0.778",
+        "pr_auc": 0.7123,
+        "brier": 0.2086
+      }
+    },
+    "paired_tests": {
+      "LightGBM with macro - logistic with macro": {
+        "delta_auc": 0.00227,
+        "ci_low": -0.009654,
+        "ci_high": 0.014411,
+        "p_value_one_sided": 0.358
+      },
+      "Logistic with macro - logistic no macro": {
+        "delta_auc": 0.047434,
+        "ci_low": 0.03251,
+        "ci_high": 0.062547,
+        "p_value_one_sided": 0.0
+      },
+      "LightGBM with macro - LightGBM no macro": {
+        "delta_auc": 0.040154,
+        "ci_low": 0.022616,
+        "ci_high": 0.058567,
+        "p_value_one_sided": 0.0
+      },
+      "Logistic no macro - rule": {
+        "delta_auc": 0.053006,
+        "ci_low": 0.034264,
+        "ci_high": 0.071455,
+        "p_value_one_sided": 0.0
+      },
+      "LightGBM no macro - logistic no macro": {
+        "delta_auc": 0.00955,
+        "ci_low": -1.1e-05,
+        "ci_high": 0.018524,
+        "p_value_one_sided": 0.026
+      }
+    },
+    "champion": "Logistic, with macro",
+    "challenger": "LightGBM tuned, with macro",
+    "challenger_params": {
+      "subsample_freq": 1,
+      "random_state": 42,
+      "verbose": -1,
+      "n_jobs": 4,
+      "n_estimators": 150,
+      "learning_rate": 0.039548,
+      "num_leaves": 13,
+      "min_child_samples": 92,
+      "subsample": 0.94644,
+      "colsample_bytree": 0.62907,
+      "reg_lambda": 7.228594
+    },
+    "policy_recalibrate": false,
+    "calibration_walk_forward": {
+      "no macro | monthly retrain + rolling shift": {
+        "pred / obs | Jun - Nov 2010 (test)": 1.086009,
+        "pred / obs | Mar 2009 - May 2010 (pre-test)": 1.467059,
+        "Brier | Jun - Nov 2010 (test)": 0.225743,
+        "Brier | Mar 2009 - May 2010 (pre-test)": 0.1784,
+        "AUC | Jun - Nov 2010 (test)": 0.706394,
+        "AUC | Mar 2009 - May 2010 (pre-test)": 0.592378
+      },
+      "no macro | monthly retrain, raw": {
+        "pred / obs | Jun - Nov 2010 (test)": 0.658429,
+        "pred / obs | Mar 2009 - May 2010 (pre-test)": 0.518025,
+        "Brier | Jun - Nov 2010 (test)": 0.256943,
+        "Brier | Mar 2009 - May 2010 (pre-test)": 0.163383,
+        "AUC | Jun - Nov 2010 (test)": 0.70189,
+        "AUC | Mar 2009 - May 2010 (pre-test)": 0.673634
+      },
+      "with macro | monthly retrain + rolling shift": {
+        "pred / obs | Jun - Nov 2010 (test)": 1.101313,
+        "pred / obs | Mar 2009 - May 2010 (pre-test)": 1.727622,
+        "Brier | Jun - Nov 2010 (test)": 0.210225,
+        "Brier | Mar 2009 - May 2010 (pre-test)": 0.295959,
+        "AUC | Jun - Nov 2010 (test)": 0.736781,
+        "AUC | Mar 2009 - May 2010 (pre-test)": 0.574915
+      },
+      "with macro | monthly retrain, raw": {
+        "pred / obs | Jun - Nov 2010 (test)": 1.095624,
+        "pred / obs | Mar 2009 - May 2010 (pre-test)": 1.047165,
+        "Brier | Jun - Nov 2010 (test)": 0.203327,
+        "Brier | Mar 2009 - May 2010 (pre-test)": 0.157746,
+        "AUC | Jun - Nov 2010 (test)": 0.757876,
+        "AUC | Mar 2009 - May 2010 (pre-test)": 0.636534
+      }
+    },
+    "grouped_permutation": {
+      "previous campaign (outcome, count, days)": 0.180351,
+      "contact channel": 0.057136,
+      "weekday": 0.007882,
+      "age": 0.000914,
+      "credit default status": 0.000815,
+      "macro (all 5, shuffled together)": 0.000767,
+      "education": -4.6e-05,
+      "housing / personal loan": -0.000327,
+      "job": -0.002369,
+      "marital status": -0.003683
+    },
+    "score_psi_train_test": 11.534968
+  },
+  "03_contact_policy": {
+    "cap5": {
+      "calls_saved_pct": 0.145857,
+      "subscriptions_kept_pct": 0.959914
+    },
+    "walk_forward_rows": 29051,
+    "walk_forward_auc_pooled": 0.645313,
+    "walk_forward_auc_within_month": 0.566531,
+    "assumptions": {
+      "margin": 100.0,
+      "cost_per_call": 5.0
+    },
+    "calls_for_80pct": 0.710958,
+    "calls_for_90pct": 0.851853,
+    "policies": {
+      "Call everyone, no cap (status quo)": {
+        "calls": 71564.0,
+        "subscriptions": 4212.0,
+        "subs per 100 calls": 5.885641,
+        "net value (EUR)": 63380.0,
+        "vs status quo (EUR)": 0.0
+      },
+      "Cap at 5 calls (published)": {
+        "calls": 62442.0,
+        "subscriptions": 4065.0,
+        "subs per 100 calls": 6.510041,
+        "net value (EUR)": 94290.0,
+        "vs status quo (EUR)": 30910.0
+      },
+      "EV floor: skip p < 5%": {
+        "calls": 55082.0,
+        "subscriptions": 3783.0,
+        "subs per 100 calls": 6.867942,
+        "net value (EUR)": 102890.0,
+        "vs status quo (EUR)": 39510.0
+      },
+      "EV floor + cap at 5": {
+        "calls": 49183.0,
+        "subscriptions": 3683.0,
+        "subs per 100 calls": 7.48836,
+        "net value (EUR)": 122385.0,
+        "vs status quo (EUR)": 59005.0
+      },
+      "Top 80% of each list + cap at 5": {
+        "calls": 49732.0,
+        "subscriptions": 3522.0,
+        "subs per 100 calls": 7.081959,
+        "net value (EUR)": 103540.0,
+        "vs status quo (EUR)": 40160.0
+      }
+    },
+    "policy_uplift_by_period": {
+      "Cap at 5 calls (published)": {
+        "Jul-Dec 2008": 29800.0,
+        "Mar-May 2009": 4190.0,
+        "Jun 2009-May 2010": -2115.0,
+        "Jun-Nov 2010": -965.0
+      },
+      "EV floor: skip p < 5%": {
+        "Jul-Dec 2008": 49220.0,
+        "Mar-May 2009": -9470.0,
+        "Jun 2009-May 2010": -240.0,
+        "Jun-Nov 2010": 0.0
+      },
+      "EV floor + cap at 5": {
+        "Jul-Dec 2008": 67620.0,
+        "Mar-May 2009": -5295.0,
+        "Jun 2009-May 2010": -2355.0,
+        "Jun-Nov 2010": -965.0
+      },
+      "Top 80% of each list + cap at 5": {
+        "Jul-Dec 2008": 53815.0,
+        "Mar-May 2009": 7120.0,
+        "Jun 2009-May 2010": -16990.0,
+        "Jun-Nov 2010": -3785.0
+      }
+    },
+    "sensitivity": [
+      {
+        "margin (EUR)": 50,
+        "cost per call (EUR)": 2,
+        "break-even p": 0.04,
+        "cap 5": 10894,
+        "EV floor + cap 5": 10140
+      },
+      {
+        "margin (EUR)": 50,
+        "cost per call (EUR)": 5,
+        "break-even p": 0.1,
+        "cap 5": 38260,
+        "EV floor + cap 5": 151445
+      },
+      {
+        "margin (EUR)": 50,
+        "cost per call (EUR)": 10,
+        "break-even p": 0.2,
+        "cap 5": 83870,
+        "EV floor + cap 5": 431150
+      },
+      {
+        "margin (EUR)": 100,
+        "cost per call (EUR)": 2,
+        "break-even p": 0.02,
+        "cap 5": 3544,
+        "EV floor + cap 5": -9858
+      },
+      {
+        "margin (EUR)": 100,
+        "cost per call (EUR)": 5,
+        "break-even p": 0.05,
+        "cap 5": 30910,
+        "EV floor + cap 5": 59005
+      },
+      {
+        "margin (EUR)": 100,
+        "cost per call (EUR)": 10,
+        "break-even p": 0.1,
+        "cap 5": 76520,
+        "EV floor + cap 5": 302890
+      },
+      {
+        "margin (EUR)": 150,
+        "cost per call (EUR)": 2,
+        "break-even p": 0.013333,
+        "cap 5": -3806,
+        "EV floor + cap 5": -21110
+      },
+      {
+        "margin (EUR)": 150,
+        "cost per call (EUR)": 5,
+        "break-even p": 0.033333,
+        "cap 5": 23560,
+        "EV floor + cap 5": 7435
+      },
+      {
+        "margin (EUR)": 150,
+        "cost per call (EUR)": 10,
+        "break-even p": 0.066667,
+        "cap 5": 69170,
+        "EV floor + cap 5": 201550
+      },
+      {
+        "margin (EUR)": 200,
+        "cost per call (EUR)": 2,
+        "break-even p": 0.01,
+        "cap 5": -11156,
+        "EV floor + cap 5": -34504
+      },
+      {
+        "margin (EUR)": 200,
+        "cost per call (EUR)": 5,
+        "break-even p": 0.025,
+        "cap 5": 16210,
+        "EV floor + cap 5": -12035
+      },
+      {
+        "margin (EUR)": 200,
+        "cost per call (EUR)": 10,
+        "break-even p": 0.05,
+        "cap 5": 61820,
+        "EV floor + cap 5": 118010
+      }
+    ],
+    "holdout_power": [
+      {
+        "base subscription rate": 0.1,
+        "detectable relative change": 0.1,
+        "control clients": 8430,
+        "policy clients (4x)": 33719,
+        "total listed clients": 42148
+      },
+      {
+        "base subscription rate": 0.1,
+        "detectable relative change": 0.15,
+        "control clients": 3655,
+        "policy clients (4x)": 14619,
+        "total listed clients": 18274
+      },
+      {
+        "base subscription rate": 0.1,
+        "detectable relative change": 0.2,
+        "control clients": 2003,
+        "policy clients (4x)": 8012,
+        "total listed clients": 10015
+      },
+      {
+        "base subscription rate": 0.45,
+        "detectable relative change": 0.1,
+        "control clients": 1185,
+        "policy clients (4x)": 4740,
+        "total listed clients": 5925
+      },
+      {
+        "base subscription rate": 0.45,
+        "detectable relative change": 0.15,
+        "control clients": 523,
+        "policy clients (4x)": 2090,
+        "total listed clients": 2612
+      },
+      {
+        "base subscription rate": 0.45,
+        "detectable relative change": 0.2,
+        "control clients": 291,
+        "policy clients (4x)": 1164,
+        "total listed clients": 1455
+      }
+    ]
+  }
+}

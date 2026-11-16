@@ -9,7 +9,7 @@ Who to call, how often, and how much of conversion is the economy: 41K real tele
 ## What the data says
 
 - Conversion rose from 5% to 52% as the 3-month Euribor fell from 4.6% to 0.8%: the macro backdrop dominated the campaign.
-- Students and retirees convert at 2-3x the campaign average; blue-collar clients at 0.6x.
+- Students and retirees convert at 2-3x the campaign average; blue-collar clients at 0.6x. Much of that gap is timing: within a single period the lift shrinks, because those groups were called more in the high-conversion months ([notebook 01](ds/notebooks/01_eda.ipynb)).
 - Capping calls at 5 per client cuts 15% of calls and keeps 96% of subscriptions.
 - Clients who said yes to a previous campaign convert at 65%.
 
@@ -28,6 +28,14 @@ Who to call, how often, and how much of conversion is the economy: 41K real tele
 - Field parameter `Segment by` (8 dimensions) driving a lift chart and scorecard.
 - What-if table `Attempt Cap` with an exact simulation of calls saved and subscriptions lost, plus a trade-off curve that ignores the slicer (visual interactions).
 - DAX user-defined function `Lift`; measures documented in display folders.
+
+## Data science
+
+Three notebooks add what the report does not have: a propensity model validated out of time, and a contact policy priced in money. Full results, figures and the model card: [ds/README.md](ds/README.md).
+
+- [01 · EDA](ds/notebooks/01_eda.ipynb): the rise in conversion came with a 20-fold smaller, warmer call list; segment lifts shrink within a period; call duration is excluded because it is known only after the call.
+- [02 · Propensity model](ds/notebooks/02_propensity_model.ipynb): random cross-validation reports AUC 0.80 where the real future gives 0.72; the champion (logistic regression with macro inputs) scores 0.751 out of time, tied with LightGBM.
+- [03 · Contact policy](ds/notebooks/03_contact_policy.ipynb): the cap at five calls is reproduced (15% fewer calls, 96% of subscriptions) and is the policy that holds up across cost assumptions; a randomised holdout design to prove it.
 
 ## Design
 
