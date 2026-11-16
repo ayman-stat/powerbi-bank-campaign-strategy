@@ -1,5 +1,7 @@
 # Retail Bank Campaign Strategy
 
+[![ci](https://github.com/ayman-stat/powerbi-bank-campaign-strategy/actions/workflows/ci.yml/badge.svg)](https://github.com/ayman-stat/powerbi-bank-campaign-strategy/actions/workflows/ci.yml)
+
 Who to call, how often, and how much of conversion is the economy: 41K real telemarketing contacts of a Portuguese retail bank.
 
 **Domain:** Banking / direct marketing  ·  **Built with:** Power BI Desktop (PBIP, PBIR, TMDL), DAX, Python  ·  **Author:** [Mohamed Ayman](https://mohamedaymanstat.vercel.app)
